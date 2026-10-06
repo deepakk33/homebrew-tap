@@ -20,9 +20,12 @@ cask "macbreak" do
                    args: ["-dr", "com.apple.quarantine", "#{appdir}/MacBreak.app"]
   end
 
+  # `delete` runs under sudo, which turns an upgrade into a password prompt the
+  # installer cannot answer. The launch agent lives in the user's own home, so
+  # `trash` is both sufficient and non-interactive.
   uninstall quit:      "com.user.macbreak",
             launchctl: "com.user.macbreak",
-            delete:    "~/Library/LaunchAgents/com.user.macbreak.plist"
+            trash:     "~/Library/LaunchAgents/com.user.macbreak.plist"
 
   zap trash: [
     "~/Library/LaunchAgents/com.user.macbreak.plist",
