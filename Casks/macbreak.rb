@@ -11,20 +11,11 @@ cask "macbreak" do
 
   app "MacBreak.app"
 
-  # The release build is not code-signed or notarised, so macOS would refuse to
-  # open it straight from a download. Clearing the quarantine attribute is what
-  # a right-click -> Open would do, minus the dialog.
-  postflight_steps do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/MacBreak.app"]
-  end
-
-  # Both `delete` and `trash` end up shelling out to sudo for this path, which
-  # turns an upgrade into a password prompt the installer has no terminal to
-  # answer. The launch agent is in the user's own home, so remove it as the
-  # user and say so explicitly.
-  uninstall quit:      "com.user.macbreak",
-            launchctl: "com.user.macbreak",
+  # `delete` and `trash` both shell out to sudo for this path, which turns an
+  # upgrade into a password prompt the installer has no terminal to answer. The
+  # launch agent is in the user's own home, so remove it as the user.
+  uninstall launchctl: "com.user.macbreak",
+            quit:      "com.user.macbreak",
             script:    {
               executable:   "/bin/rm",
               args:         ["-f", "#{Dir.home}/Library/LaunchAgents/com.user.macbreak.plist"],
@@ -38,12 +29,17 @@ cask "macbreak" do
   ]
 
   caveats <<~EOS
-    MacBreak runs in the menu bar with no Dock icon.
+    MacBreak is not code-signed, so install it with --no-quarantine:
 
-    Open it once to start it and to switch on "Start at login":
+      brew install --cask --no-quarantine deepakk33/tap/macbreak
+
+    Without that flag macOS will refuse to open it, and you will need:
+
+      xattr -dr com.apple.quarantine "#{appdir}/MacBreak.app"
+
+    MacBreak runs in the menu bar with no Dock icon. Open it once to start
+    it and to switch on "Start at login":
 
       open -a MacBreak
-
-    Or press Cmd-Space and type "macbreak".
   EOS
 end
