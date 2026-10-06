@@ -15,8 +15,10 @@ cask "macbreak" do
   # quarantined and macOS refuses to open it. Clearing the attribute is what a
   # right-click -> Open would do, minus the dialog.
   postflight_steps do
-    run "/usr/bin/xattr",
-        args:         ["-dr", "com.apple.quarantine", "#{appdir}/MacBreak.app"],
+    run "/bin/sh",
+        args:         ["-c",
+                       "xattr -dr com.apple.quarantine /Applications/MacBreak.app " \
+                       "\"$HOME/Applications/MacBreak.app\" 2>/dev/null; true"],
         must_succeed: false
   end
 
