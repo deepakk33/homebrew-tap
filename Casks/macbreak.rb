@@ -1,6 +1,6 @@
 cask "macbreak" do
-  version "1.3.1"
-  sha256 "6a5b6529394146d089f36b0278138989539d1785dc1f9bd941cff2be5004428c"
+  version "1.4.0"
+  sha256 "7363c12494599494a703f7280e6ca361ec263a6e9aa46a681f23a701cad8176c"
 
   url "https://github.com/deepakk33/macbreak/releases/download/v#{version}/MacBreak-#{version}.zip"
   name "MacBreak"
